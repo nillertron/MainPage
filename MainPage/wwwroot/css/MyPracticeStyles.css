@@ -1,0 +1,210 @@
+﻿
+.img-showcase-container {
+    height: 280px;
+    width: 390px;
+    position: relative;
+    margin: 0;
+    z-index:2;
+    background: transparent;
+}
+.img-showcase {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background: transparent;
+}
+    .img-showcase img {
+        width: 100%;
+        height: auto;
+        border-radius: 50px;
+    }
+
+
+    .img-showcase:hover {
+        animation: hideShowcaseDiv 1.5s;
+        animation-timing-function: linear;
+        animation-fill-mode:  both;
+        animation-iteration-count:1;
+    }
+@keyframes hideShowcaseDiv{
+    0%{opacity:1;}
+    25%{opacity:0.75;}
+    50%{opacity:0.5;}
+    75%{opacity:0.25;}
+    100%{opacity:0; display:none;}
+}
+.hidden-button-div {
+    width: 100%;
+    height: 85%;
+    position: absolute;
+    background: linear-gradient(#d46651,#fdebd2, #3bb5f0 );
+    margin: 0;
+    display: flex;
+    opacity: 0;
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 150%;
+    border-radius: 50px;
+    text-align: center;
+}
+.hidden-button-div-play {
+    animation: showHiddenButton 1.5s;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+}
+@keyframes showHiddenButton{
+    0% {
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 0.25;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    75% {
+        opacity: 0.75;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+.img-showcase p {
+    position:absolute;
+    z-index:99;
+    color:white;
+    font-size:200%;
+    top:50%;
+    left:50%;
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    white-space:nowrap;
+    text-shadow: -4px 4px 6px dimgrey;
+
+
+}
+
+.carousel-img-wrapper {
+    width: 900px;
+    height: 350px;
+    margin: 0 auto;
+}
+.carousel-img-wrapper img {
+    border-radius: 20px;
+    max-height:100%;
+    max-width:100%;
+
+
+    
+}
+.portfolio-container {
+    margin-top: 2em;
+    border-radius: 15px;
+}
+.portfolio-container h3{
+    text-align:center;
+}
+.portfolio-container p {
+    font-size: medium;
+}
+    .portfolio-container a {
+        font-size: medium;
+        color:black;
+        
+    }
+
+.Contact-Options-Wrapper {
+
+    border-color: black;
+    box-shadow: 0px 0px 5px 5px rgba(175,175,176,1);
+}
+.Contact-Options-Header {
+    background-color: #fafafb;
+    font-size:x-large;
+    text-align:center;
+    position: relative;
+    width:100%;
+    height:5em;
+    line-height:5em;
+}
+.Contact-Options-Content {
+    width: 100%;
+    position: relative;
+    line-height:5em;
+    max-height:20em;
+    display:block;
+    overflow:hidden;
+    
+}
+.Contact-Options-Content p{
+    position:relative;
+}
+    .Contact-Options-Content label {
+        font-style:oblique;
+        font-size:large;
+    }
+
+    .Contact-Options-AnimationDown {
+        animation: contactAnimationDown 1s;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+        animation-iteration-count: 1;
+    }
+@keyframes contactAnimationDown {
+    0% {
+        display: block;
+        max-height: 0px;
+    }
+
+    25% {
+        max-height: 5em;
+    }
+    50% {
+        max-height: 15em;
+    }
+    75% {
+        max-height: 30em;
+    }
+    100% {
+
+        max-height:50em;
+        line-height:3em;
+    }
+}
+.Contact-Options-AnimationUp {
+    animation: contactAnimationUp 1s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+}
+
+@keyframes contactAnimationUp {
+    0% {
+        max-height: 20em;
+
+    }
+
+    25% {
+        max-height: 5em;
+    }
+
+    50% {
+        max-height: 3em;
+    }
+
+    75% {
+        max-height: 1em;
+    }
+
+    100% {
+        max-height: 0px;
+    }
+}

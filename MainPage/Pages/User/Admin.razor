@@ -1,0 +1,12 @@
+﻿@inject IMessageService msgService
+<AuthContent>
+    <div class="card-header" style="">
+        <a style="color:black" href="portfolio/create">Create portfolio entry</a><br />
+        <a style="color:black" href="messages/all">View Messages</a><p class="d-inline" style="color:darkred"> @msgService.GetUnreadAmount().Result</p>
+    </div>
+
+</AuthContent>
+
+@code {
+
+}

@@ -1,0 +1,56 @@
+﻿@inject IJSRuntime js
+@inject IMessageService msgService
+<EditForm Model="model" OnValidSubmit="OnSubmit">
+    <div class="row">
+        <div class="col-6">
+            <label for="name">Name</label>
+            <InputText required id="name" class="form-control" placeholder="Your name here" @bind-Value="model.SenderName"></InputText>
+            <label for="e-mail">E-mail</label>
+            <InputText required id="e-mail" class="form-control" placeholder="Your e-mail here" @bind-Value="model.SenderEmail"></InputText>
+            <label for="pnumber">Phone Number</label>
+            <InputText required id="pnumber" class="form-control" placeholder="Your phone number here" @bind-Value="model.SenderPhoneNumber"></InputText>
+            <label for="location">Location</label>
+            <InputText required id="location" class="form-control" placeholder="Where are you from?" @bind-Value="model.ClientLocation"></InputText>
+        </div>
+        <div class="col-6">
+            <label class="d-block" style="margin-bottom:1.5px;" for="Budget">Budget:</label>
+
+                <InputNumber style="display:inline; width:33%" required id="Budget" class="form-control"  @bind-Value="model.Budget"></InputNumber>
+                <select style="display:inline; width:15%" required class="form-control" @bind="currencyId">
+                @for(int i = 0; i<currencies.Count; i++)
+                {
+                    <option value="@i">@currencies[i]</option>
+                }
+                </select>
+
+
+            <label class="d-block" style="margin-bottom:1.5px;"  for="deadline">Deadline</label>
+            <InputDate required id="deadline" class="form-control" placeholder="Select Deadline" @bind-Value="model.DeadLine"></InputDate>
+            <label for="jobType">Job Type</label>
+            <InputText required id="jobType" class="form-control" placeholder="Web solution? Phone App? Desktop App?" @bind-Value="model.FreelanceJobType"></InputText>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center" style="">
+            <label for="Headline" class="" style="">Headline</label>
+            <InputText required id="Headline" class="form-control w-50" style="margin:0 auto" placeholder="Headline here" @bind-Value="model.Headline"></InputText>
+            <label for="content" style="display:block;text-align:start">Content</label>
+            <InputTextArea required id="content" class="form-control" style="min-height:10em" placeholder="Describe your project, requirements etc. Keep it short for now" @bind-Value="model.Content"></InputTextArea>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Ship message</button>
+</EditForm>
+
+@code {
+    private MS_FreeLanceMessage model = new MS_FreeLanceMessage();
+    private List<string> currencies = new List<string> {"Euro","USD","DKK" };
+    private int currencyId = 0;
+
+    private async Task OnSubmit()
+    {
+        model.Currency = currencies[currencyId];
+        await msgService.CreateMessage(model);
+        await js.InvokeVoidAsync("selectContactMethod", "contactfinish", "contactcontent");
+    }
+
+}

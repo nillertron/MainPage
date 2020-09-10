@@ -1,0 +1,68 @@
+﻿@inject IJSRuntime js
+<form id="form" enctype="multipart/form-data">
+    <label>
+        Select file
+        <input multiple id="@fileClassName" type="file" />
+
+    </label><br />
+    <i class="btn btn-primary rounded" @onclick="UploadImages">Upload Picture</i>
+</form>
+<div class="row">
+    @foreach (var img in imgList)
+    {
+        <div class="col-4">
+            <img src="@img.Url" style="max-width:100%; max-height:100%" />
+        </div>
+    }
+</div>
+@code {
+
+    private List<MS_Picture> _imgList = new List<MS_Picture>();
+    public List<MS_Picture> imgList { get => _imgList; set { _imgList = value; } }
+    private string fileClassName = "file";
+
+    [Parameter]
+    public bool MultiUpload { get; set; }
+
+    [Parameter]
+    public EventCallback<List<MS_Picture>> ListUpdated { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if(MultiUpload)
+            fileClassName = "files";
+
+    }
+    private async Task UploadImages()
+    {
+        try
+        {
+            if(MultiUpload)
+            {
+                var result = await js.InvokeAsync<object>("UploadImages", DotNetObjectReference.Create(this));
+
+            }
+            else
+            {
+                var result = await js.InvokeAsync<object>("UploadImage", DotNetObjectReference.Create(this));
+                
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+    [JSInvokable("ReadListCallback")]
+    public void ReadListCallback(string[] input)
+    {
+        foreach (var imgLink in input)
+        {
+            imgList.Insert(0, new MS_Picture { Url = imgLink });
+            StateHasChanged();
+        }
+        ListUpdated.InvokeAsync(imgList);
+    }
+}

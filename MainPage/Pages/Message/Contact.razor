@@ -1,0 +1,72 @@
+﻿@page "/contact";
+@inject IJSRuntime js
+<div class="Contact-Options-Wrapper">
+    <div class="Contact-Options-Header">
+        <p>The reason to contact me?</p>
+    </div>
+    <div id="contacthead" class="Contact-Options-Content text-center">
+        <label for="optJob">Job offer</label>
+        <input name="option" id="optJob" type="radio" @onclick="Job" />
+        <label for="optFreelance">Freelance work</label>
+        <input name="option" id="optFreelance" type="radio" @onclick="Freelance" />
+    </div>
+</div>
+<div class="row" style="height:3em"></div>
+<div class="Contact-Options-Wrapper">
+
+    <div class="Contact-Options-Header">
+        <p>@subject</p>
+    </div>
+
+    <div id="contactcontent" class="Contact-Options-Content" style="height:0px;">
+        @if (freelance)
+        {
+            <ContactFreelance></ContactFreelance>
+        }
+        else if (job)
+        {
+            <ContactJob></ContactJob>
+        }
+    </div>
+
+
+</div>
+<div class="row" style="height:3em"></div>
+
+<div id="" class="Contact-Options-Wrapper" style="">
+
+    <div class="Contact-Options-Header">
+        <p>Message Sent</p>
+    </div>
+    <div id="contactfinish" class="Contact-Options-Content" style="height:0px;">
+     <p>You message has been sent, and i will look into your request as soon as possible.</p>
+    </div>
+
+
+</div>
+
+
+
+@code {
+    private string subject = "Chose above";
+    private bool _freelance;
+    private bool freelance { get => _freelance; set { _freelance = value; StateHasChanged(); } }
+    private bool _job;
+    private bool job { get => _job; set { _job = value; StateHasChanged(); } }
+
+    private async Task Freelance()
+    {
+        job = false;
+        freelance = true;
+        subject = "Freelance";
+        await js.InvokeVoidAsync("selectContactMethod", "contactcontent", "contacthead");
+    }
+    private async Task Job()
+    {
+        freelance = false;
+        job = true;
+        subject = "Job Offer";
+        await js.InvokeVoidAsync("selectContactMethod", "contactcontent", "contacthead");
+
+    }
+}

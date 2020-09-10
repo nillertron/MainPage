@@ -1,0 +1,65 @@
+﻿@page "/message/details/{id:int}"
+@inject IMessageService service
+<MainPage.Pages.User.AuthContent>
+    <div class="row">
+        <div class="col-xl-6 col-12 text-center">
+            <h5>Sender Name</h5>
+            <p>@message.SenderName</p>
+            <h5>Sender Email</h5>
+            <p>@message.SenderEmail</p>
+            <h5>Sender phonenumber</h5>
+            <p>@message.SenderPhoneNumber</p>
+            <h5>Message sent date</h5>
+            <p>@message.MessageSent</p>
+
+        </div>
+        <div class="col-xl-6 col-12 text-center">
+            @if (message.GetType() == typeof(MS_JobMessage))
+            {
+                var jobMessage = (MS_JobMessage)message;
+                <h5>Company Name</h5>
+                <p>@jobMessage.CompanyName</p>
+                <h5>Company Address</h5>
+                <p>@jobMessage.CompanyAddress</p>
+                <h5>Company City</h5>
+                <p>@jobMessage.CompanyCity</p>
+            }
+            else if (message.GetType() == typeof(MS_FreeLanceMessage))
+            {
+                var freelanceMessage = (MS_FreeLanceMessage)message;
+                <h5>Clients location</h5>
+                <p>@freelanceMessage.ClientLocation</p>
+                <h5>Clients budget</h5>
+                <p>@freelanceMessage.Budget</p>
+                <h5>Deadline</h5>
+                <p>@freelanceMessage.DeadLine</p>
+                <h5>Job type</h5>
+                <p>@freelanceMessage.FreelanceJobType</p>
+
+
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card-header">
+                <h5 class="text-center">@message.Headline</h5>
+                <hr />
+                <p>@message.Content</p>
+            </div>
+
+        </div>
+    </div>
+</MainPage.Pages.User.AuthContent>
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private MS_Message message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        message = await service.GetMessage(Id);
+    }
+}

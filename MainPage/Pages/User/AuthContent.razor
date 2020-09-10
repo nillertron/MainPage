@@ -1,0 +1,39 @@
+﻿@inject IUserService service
+@inject IJSRuntime js
+@if(service.IsLoggedIn().Result)
+{
+    @ChildContent
+}
+else
+{
+    @NotAuthMessage
+}
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    [Parameter]
+    public string NotAuthMessage { get; set; } = "Not Authorized";
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            var user = await js.InvokeAsync<string>("ReadCookie", "StayloggedinCookie");
+            if (user != null)
+            {
+                try
+                {
+                    await service.LoginFromCookie(user);
+                    StateHasChanged();
+                }
+                catch(Exception ex)
+                {
+
+                }
+
+            }
+        }
+    }
+}

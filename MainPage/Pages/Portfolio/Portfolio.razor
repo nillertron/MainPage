@@ -1,0 +1,46 @@
+﻿@page "/portfolio/portfolio"
+@inject IPortfolioService service
+@inject IJSRuntime js
+<div class="row">
+    @foreach (var img in portfolioListeWithFrontImg)
+    {
+
+        var frontfoto = img.PhotoLinks.Where(x => x.FrontFoto == true).FirstOrDefault();
+        if (frontfoto != null)
+        {
+    <div class="col-10 offset-2 offset-xl-0 col-xl-4">
+        <div class="img-showcase-container">
+            <div @onmouseover="@(async () => await ShowButton(img.Id))" @onmouseout="(async () => await HideButton(img.Id))" class="img-showcase">
+                <a href="@("portfolio/details/"+img.Id)"><img class="" src="@frontfoto.Url" /></a>
+                <p>@img.Navn</p>
+            </div>
+            <div id="@img.Id" class="hidden-button-div" style="">
+                <p>@img.ShortDescription</p>
+            </div>
+        </div>
+    </div>
+
+        }
+
+    }
+</div>
+
+
+@code {
+    private List<MS_Portfolio> portfolioListeWithFrontImg = new List<MS_Portfolio>();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        portfolioListeWithFrontImg = await service.GetAllPortfolioWtihFrontFoto();
+    }
+    private async Task ShowButton(int id)
+    {
+        var arg = "#" + id.ToString();
+        await js.InvokeVoidAsync("ShowButton",arg);
+    }
+    private async Task HideButton(int id)
+    {
+        var arg = "#" + id.ToString();
+        await js.InvokeVoidAsync("HideButton", arg);
+    }
+}

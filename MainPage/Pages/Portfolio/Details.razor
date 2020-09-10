@@ -1,0 +1,56 @@
+﻿@page "/portfolio/details/{id:int}"
+@inject IPortfolioService service
+@inject IJSRuntime js
+
+<div class="carousel slide">
+    <div class="carousel-inner" style="">
+
+        @foreach (var img in model.PhotoLinks)
+        {
+
+        <div class="@carouselClass">
+            <div class="col-12 carousel-img-wrapper">
+                <img src="@img.Url" />
+            </div>
+        </div>
+            first = true;
+
+        }
+
+    </div>
+</div>
+<div class="col-12 portfolio-container">
+    <h3>@model.Navn</h3>
+    
+    <p>@markup</p>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private MS_Portfolio model = new MS_Portfolio();
+    private bool first = false;
+    private MarkupString markup { get { return (MarkupString)model.Beskrivelse; } }
+    private string carouselClass { get { return first ? "carousel-item text-center" : "carousel-item text-center active"; } }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        try
+        {
+            model = await service.Get(Id);
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await js.InvokeVoidAsync("startCarousel");
+        }
+    }
+}

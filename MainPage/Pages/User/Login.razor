@@ -1,0 +1,55 @@
+﻿@page "/login"
+@inject IUserService service
+@inject IJSRuntime js
+<AuthContent NotAuthMessage="">
+    <Admin></Admin>
+</AuthContent>
+@if (!loggedIn)
+{
+    <h3>Login</h3>
+    <form class="form-group">
+        <label for="name">User Name</label>
+        <input class="form-control" id="name" placeholder="User name" type="text" @bind="userName" />
+        <label for="pass">Password</label>
+        <input class="form-control" id="pass" placeholder="Password" type="password" @bind="password" />
+        <button type="button" class="btn btn-primary" @onclick="AttemptLogin">Login</button>
+    </form>
+}
+@msg
+
+@code {
+    private string userName = string.Empty;
+    private string password = string.Empty;
+    private string msg = string.Empty;
+    private bool loggedIn = true;
+    private async Task AttemptLogin()
+    {
+        try
+        {
+            await service.Login(userName, password);
+            msg = "Welcome back !";
+            await js.InvokeVoidAsync("SetCookie", "StayloggedinCookie", userName, 30);
+            loggedIn = true;
+        }
+        catch (Exception ex)
+        {
+            msg = ex.Message;
+        }
+        StateHasChanged();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if(firstRender)
+        {
+            //delay because it needs to figure out if im logged in
+            Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+                loggedIn = await service.IsLoggedIn();
+
+            });
+        }
+        StateHasChanged();
+    }
+}

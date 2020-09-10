@@ -1,0 +1,42 @@
+﻿@inject IJSRuntime js
+@inject IMessageService msgService
+<EditForm Model="model" OnValidSubmit="OnSubmit">
+    <div class="row">
+        <div class="col-6">
+            <label for="name">Name</label>
+            <InputText required id="name" class="form-control" placeholder="Your name here" @bind-Value="model.SenderName"></InputText>
+            <label for="e-mail">E-mail</label>
+            <InputText required id="e-mail" class="form-control" placeholder="Your e-mail here" @bind-Value="model.SenderEmail"></InputText>
+            <label for="pnumber">Phone Number</label>
+            <InputText required id="pnumber" class="form-control" placeholder="Your phone number here" @bind-Value="model.SenderPhoneNumber"></InputText>
+        </div>
+        <div class="col-6">
+            <label for="companyName">Company Name</label>
+            <InputText required id="companyName" class="form-control" placeholder="Company name here" @bind-Value="model.CompanyName"></InputText>
+            <label for="companyAddress">Company Address</label>
+            <InputText required id="companyAddress" class="form-control" placeholder="Company Address here" @bind-Value="model.CompanyAddress"></InputText>
+            <label for="companyCity">Company City</label>
+            <InputText required id="companyCity" class="form-control" placeholder="Company City here" @bind-Value="model.CompanyCity"></InputText>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center" style="">
+            <label for="Headline" class="" style="">Headline</label>
+            <InputText required id="Headline" class="form-control w-50" style="margin:0 auto" placeholder="Headline here" @bind-Value="model.Headline"></InputText>
+            <label for="content" style="display:block;text-align:start">Content</label>
+            <InputTextArea required id="content" class="form-control" style="min-height:10em" placeholder="Content for your message here..." @bind-Value="model.Content"></InputTextArea>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Ship message</button>
+</EditForm>
+
+@code {
+    private Model.MS_JobMessage model = new MS_JobMessage();
+
+    private async Task OnSubmit()
+    {
+        await msgService.CreateMessage(model);
+        await js.InvokeVoidAsync("selectContactMethod", "contactfinish", "contactcontent");
+    }
+
+}

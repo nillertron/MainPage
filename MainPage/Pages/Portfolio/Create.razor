@@ -1,0 +1,58 @@
+﻿@page "/portfolio/create"
+@inject IPortfolioService service;
+    <MainPage.Pages.User.AuthContent>
+        <EditForm class="form-group" Model="model" OnValidSubmit="Submit">
+            <label>
+                Name
+                <InputText class="form-control" @bind-Value="model.Navn"></InputText>
+            </label><br />
+            <label>
+                Description
+                <InputTextArea class="form-control" @bind-Value="model.Beskrivelse" style="width:66vh; height:30em"></InputTextArea>
+            </label><br />
+            <button class="btn btn-primary" type="submit">Create</button>
+        </EditForm>
+        <div class="border">
+            <h2 class="text-center">Upload Images</h2>
+            <h3>Upload <b>front</b> image</h3>
+            <FileUploader ListUpdated="FrontfotoHandler"></FileUploader>
+            <hr />
+            <h3>Upload <b>body</b> images</h3>
+            <FileUploader MultiUpload="true" ListUpdated="UpdatedListHandler"></FileUploader>
+
+        </div>
+    </MainPage.Pages.User.AuthContent>
+    @code {
+        private MS_Portfolio model = new MS_Portfolio();
+
+        private async Task Submit()
+        {
+            model.Published = DateTime.Now;
+            try
+            {
+                await service.Create(model);
+                model = new MS_Portfolio();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        private async Task UpdatedListHandler(List<MS_Picture> pictures)
+        {
+            model.PhotoLinks.AddRange(pictures);
+        }
+        private async Task FrontfotoHandler(List<MS_Picture> pictures)
+        {
+            var frontFoto = model.PhotoLinks.Where(x => x.FrontFoto == true).FirstOrDefault();
+            if (frontFoto != null)
+                frontFoto.FrontFoto = false;
+            frontFoto = pictures.FirstOrDefault();
+            if (frontFoto != null)
+                frontFoto.FrontFoto = true;
+            model.PhotoLinks.Add(frontFoto);
+        }
+
+    }

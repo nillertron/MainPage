@@ -1,0 +1,73 @@
+﻿@page "/"
+@inject ICompetenceService service
+@inject IJSRuntime js
+
+    <Competence></Competence>
+    <div class="row" style="height:10rem">
+        <div class="col-12">
+            <hr />
+
+        </div>
+    </div>
+    <div id="" class="carousel slide" data-ride="carousel" style="">
+        <div class="carousel-inner">
+            <div class="text-center border rounded p-0" style="color:white;background-color:#2a99cf; width:100%; height:10rem;">
+
+                @foreach (var c in competenceList)
+                {
+                    <div class="@carouselClass">
+                        <h5 style="line-height: 10rem;">
+                            @c.Kompetence
+                            @for (int i = 0; i < c.Stars; i++)
+                            {<i class="oi oi-star"></i>}
+                        </h5>
+                    </div>
+                    first = true;
+                }
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-xl-4 offset-0 offset-xl-4">
+            <img src="/css/img/me.png" class="rounded-circle float-right" style="width:100px; height:120px;" />
+
+            <p class="">
+                I am a 26-year-old man from Vejle, Denmark. Right now I am studying software engineering, in Vejle.<br />
+                I have always had a natural interest in the subject, which has led me to pursue  a career in software development<br />
+                As of right now, i am available for work, be it for a free-lance project or a job in my area or with remote availability<br />
+                I am driven and strive for results while gathering as much knowledge to improve my skills as possible.<br />
+                My specialty is .Net, and I have made a variety of applications, ranging from web apps to desktop and mobile applications.
+
+            </p>
+        </div>
+    </div>
+
+
+    @code {
+        private bool first = false;
+        private string carouselClass { get { return first ? "carousel-item" : "carousel-item active"; } }
+        private List<MS_Competence> competenceList = new List<MS_Competence>();
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+            competenceList = await service.GetAllCompetenceAsync();
+        }
+
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                Task.Run(async () =>
+                {
+                    await Task.Delay(1000);
+                    await js.InvokeVoidAsync("startCarousel");
+
+                });
+
+            }
+        }
+    }
